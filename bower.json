@@ -1,0 +1,23 @@
+{
+  "name": "WeatherNode",
+  "main": "index.js",
+  "version": "0.0.1",
+  "authors": [
+    "John Drogo <admin@jldapps.com>"
+  ],
+  "description": "A simple weather app using NodeJS, Mongo, AngularJS, and Express.",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "homepage": "weathernode.herokuapp.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower_components",
+    "test",
+    "tests"
+  ]
+}
