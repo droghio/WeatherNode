@@ -1,3 +1,14 @@
+/*
+	John Drogo
+	May 29, 2014
+
+	WeatherNode Server
+	
+	This is a nodejs backend script that responds with an image url to be shown
+	for the given weather condition.
+*/
+
+
 var http = require('http');
 var mongoose = require('mongoose');
 var express = require("express");
@@ -10,27 +21,35 @@ var models = require("./models/weather.js");
 
 var Flickr = require("flickrapi"),
     flickrOptions = {
-      api_key: "45156932c38533d0608b7d487e8b1d16",
-      secret: "e137cad75d9a15c8"
+      api_key: "API_KEY",
+      secret: "API_SECRET"
     };
 
 function newWeather(conditionname, imageurl, Condition){
+	/*Creates new weather condition in the database, feature disabled.*/
 
 	var newweather = new Condition({ name: conditionname, imageurl: imageurl })
 	/*console.log("Created Document.\n\tNew object: " + newweather.name + " Image: " + imageurl) // 'Silence'
 	newweather.save(function (){});*/
-	return newweather;
 	console.log("Weather creation disabled.");
+	return newweather;
 }
 
 
 function fetchWeather(conditionname, res){
-	mongoose.connect('mongodb://john:eggplants8@oceanic.mongohq.com:10079/developer');
+	/*Query the database for which image we should use for the provided weather condition.*/
+
+	mongoose.connect('mongodb://DB_USERNAME:DB_PASSWORD@oceanic.mongohq.com:10079/developer');
 	var db = mongoose.connection;
 	db.on('error', console.error.bind(console, 'connection error:'));
 	db.once('open', function callback(){
 
 		console.log("Request: " + conditionname);
+
+		/*
+			Weather condition in is url. Optionally we can create a new weather condition that points to the
+			provided image url. (Disabled)
+		*/
 
 		var imgurl = conditionname.split("/")[3];
 		conditionname = conditionname.split("/")[2];
@@ -46,6 +65,7 @@ function fetchWeather(conditionname, res){
 				wthr = newWeather(conditionname, imgurl, Condition)
 	
 
+		/*Search flickr for a background image based on the current condition. Disabled.*/
 		/*Flickr.tokenOnly(flickrOptions, function(error, flickr) {
 			// we can now use "flickr" as our API object
 			flickr.photos.search({
@@ -70,8 +90,9 @@ function fetchWeather(conditionname, res){
 }
 
 
-var port = Number(process.env.PORT);
+/*Serve static content, and query the database when a request is sent to a mydomain.com/node/ url.*/
 
+var port = Number(process.env.PORT);
 app.use(express.static(__dirname + "/public"));
 
 app.get('/node/*', function(req, res) {

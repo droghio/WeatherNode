@@ -1,6 +1,6 @@
 {
   "name": "weatherServer",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Database server for weather images.",
   "main": "index.js",
   "repository": {

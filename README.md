@@ -1,4 +1,4 @@
 WeatherNode
 ===========
 
-Simple Weather Applicaiton Based on Node, Mongo, Mongoose and AngularJS
+Simple Weather Applicaiton using Node, Mongo, Mongoose and AngularJS
