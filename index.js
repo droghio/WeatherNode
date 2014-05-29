@@ -6,18 +6,19 @@
 	
 	This is a nodejs backend script that responds with an image url to be shown
 	for the given weather condition.
+
+	(Make sure you put in your API keys below. Three values to update.)
 */
 
 
 var http = require('http');
 var mongoose = require('mongoose');
 var express = require("express");
-var logfmt = require("logfmt");
-var app = express();
-
-app.use(logfmt.requestLogger());
-
 var models = require("./models/weather.js");
+var logfmt = require("logfmt");
+
+var app = express();
+app.use(logfmt.requestLogger());
 
 var Flickr = require("flickrapi"),
     flickrOptions = {
@@ -25,19 +26,24 @@ var Flickr = require("flickrapi"),
       secret: "API_SECRET"
     };
 
+
 function newWeather(conditionname, imageurl, Condition){
-	/*Creates new weather condition in the database, feature disabled.*/
+	//Creates new weather condition in the database. (Disabled.)
 
 	var newweather = new Condition({ name: conditionname, imageurl: imageurl })
-	/*console.log("Created Document.\n\tNew object: " + newweather.name + " Image: " + imageurl) // 'Silence'
-	newweather.save(function (){});*/
+
+	/*
+		console.log("Created Document.\n\tNew object: " + newweather.name + " Image: " + imageurl) // 'Silence'
+		newweather.save(function (){});
+	*/
+
 	console.log("Weather creation disabled.");
 	return newweather;
 }
 
 
 function fetchWeather(conditionname, res){
-	/*Query the database for which image we should use for the provided weather condition.*/
+	//Query the database for which image we should use for the provided weather condition.w
 
 	mongoose.connect('mongodb://DB_USERNAME:DB_PASSWORD@oceanic.mongohq.com:10079/developer');
 	var db = mongoose.connection;
@@ -63,24 +69,23 @@ function fetchWeather(conditionname, res){
 
 			else
 				wthr = newWeather(conditionname, imgurl, Condition)
-	
 
-		/*Search flickr for a background image based on the current condition. Disabled.*/
-		/*Flickr.tokenOnly(flickrOptions, function(error, flickr) {
+			//Search flickr for a background image based on the current condition. Disabled.
+			/*Flickr.tokenOnly(flickrOptions, function(error, flickr) {
 			// we can now use "flickr" as our API object
-			flickr.photos.search({
-				text: conditionname,
-				safe_search: 1,
-				page: 1,
-				per_page: 1
-			}, function(err, result) {
-				// result is Flickr's response
-				result = result["photos"]["photo"][0]
-				console.log(result)
-				console.log("http://farm%s.staticflickr.com/%s/%s_%s.jpg", result["farm"], result["server"], result["id"], result["secret"]);
-				res.send("http://farm" + result["farm"] + ".staticflickr.com/" + result["server"] + "/" + result["id"] + "_" + result["secret"] + ".jpg")
-			});
-		});*/
+				flickr.photos.search({
+					text: conditionname,
+					safe_search: 1,
+					page: 1,
+					per_page: 1
+				}, function(err, result) {
+					// result is Flickr's response
+					result = result["photos"]["photo"][0]
+					console.log(result)
+					console.log("http://farm%s.staticflickr.com/%s/%s_%s.jpg", result["farm"], result["server"], result["id"], result["secret"]);
+					res.send("http://farm" + result["farm"] + ".staticflickr.com/" + result["server"] + "/" + result["id"] + "_" + result["secret"] + ".jpg")
+				});
+			});*/
 
 			res.send(wthr.imageurl);
 			console.log("End Request\n");
@@ -95,10 +100,5 @@ function fetchWeather(conditionname, res){
 var port = Number(process.env.PORT);
 app.use(express.static(__dirname + "/public"));
 
-app.get('/node/*', function(req, res) {
-   fetchWeather(req.url, res);
-});
-
-app.listen(port, function() {
-  console.log("Listening on " + port);
-});
+app.get('/node/*', function(req, res) { fetchWeather(req.url, res); });
+app.listen(port, function() { console.log("Listening on " + port); });

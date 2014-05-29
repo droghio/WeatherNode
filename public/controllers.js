@@ -11,6 +11,7 @@
 
 var app = angular.module("WeatherAppJSON", []);
 
+
 app.controller("WeatherController", function constructor($scope, $http){
 
 	$scope.loadbackground = function(){
@@ -59,9 +60,11 @@ app.controller("WeatherController", function constructor($scope, $http){
 
 
 app.directive('ngEnter', function () {
+
     //Capture when user presses enter.
     //Borrowed from EpokK's response: 
         //http://stackoverflow.com/questions/15417125/submit-form-on-pressing-enter-with-angularjs/17364716#17364716
+
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
             if(event.which === 13) {
