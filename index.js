@@ -35,6 +35,7 @@ function newWeather(conditionname, imageurl, Condition){
 	//Creates new weather condition in the database. (Disabled.)
     
 	var newweather = new Condition({ name: conditionname, imageurl: imageurl })
+    //We never call newweather.save(), so condition isn't recorded.
     
 	console.log("Weather creation disabled.");
 	return newweather;
@@ -42,7 +43,7 @@ function newWeather(conditionname, imageurl, Condition){
 
 
 function fetchWeather(conditionname, res){
-	//Query the database for which image we should use for the provided weather condition.w
+	//Query the database for which image we should use for the provided weather condition.
     
 	mongoose.connect("mongodb://" + mongouser + ":" + mongopassword + "@" + mongourl);
 	var db = mongoose.connection;
@@ -51,11 +52,9 @@ function fetchWeather(conditionname, res){
             
         console.log("Request: " + conditionname);
         
-        
         //	Weather condition in is url. Optionally we can create a new weather
         //  condition that points to the
         //  provided image url. (Disabled)
-        
         
         var imgurl = conditionname.split("/")[3];
         conditionname = conditionname.split("/")[2];

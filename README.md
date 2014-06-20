@@ -38,3 +38,20 @@ Then for express:
 
 Move to the CrawlingSpecter install directory and run:
   ```node index.js```
+
+
+###DETAILS
+
+You need a mongodb to specify which url to use for the given weather condition.
+Database query comes from the weather.main parameter from a json request to OpenWeatherMap.
+
+View their api documentation for more information:
+    http://openweathermap.org/weather-conditions
+
+I've included a backup of the mongodb I used for this project. You can clone it to a local mongodb instance by navigating to the WeatherNode files and running:
+  ```mongorestore --host 127.0.0.1 ./dump/```
+
+or for a remote server running:
+  ```mongorestore -h MONGO_DB_ADDRESS:PORT -d MONGODATABASE -u USERNAME -p PASSWORD ./dump
+
+See <a href="http://support.mongohq.com/importing-exporting/local-to-mongohq.html">http://support.mongohq.com/importing-exporting/local-to-mongohq.html</a> for more information.
