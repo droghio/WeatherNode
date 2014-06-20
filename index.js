@@ -1,14 +1,14 @@
 /*
-	John Drogo
-	May 29, 2014
-
-	WeatherNode Server
-	
-	This is a nodejs backend script that responds with an image url to be shown
-	for the given weather condition.
-
-	(Make sure you put in your API keys below. Three values to update.)
-*/
+ John Drogo
+ May 29, 2014
+ 
+ WeatherNode Server
+ 
+ This is a nodejs backend script that responds with an image url to be shown
+ for the given weather condition.
+ 
+ (Make sure you put in your API keys below. Three values to update.)
+ */
 
 
 var http = require('http');
@@ -21,22 +21,21 @@ var app = express();
 app.use(logfmt.requestLogger());
 
 var Flickr = require("flickrapi"),
-    flickrOptions = {
-      api_key: "API_KEY",
-      secret: "API_SECRET"
-    };
+flickrOptions = {
+api_key: "API_KEY",
+secret: "API_SECRET"
+};
+
+var mongouser = process.env.MONGO_USER
+var mongopassword = process.env.MONGO_PASSWORD
+var mongourl = process.env.MONGO_URL
 
 
 function newWeather(conditionname, imageurl, Condition){
 	//Creates new weather condition in the database. (Disabled.)
-
+    
 	var newweather = new Condition({ name: conditionname, imageurl: imageurl })
-
-	/*
-		console.log("Created Document.\n\tNew object: " + newweather.name + " Image: " + imageurl) // 'Silence'
-		newweather.save(function (){});
-	*/
-
+    
 	console.log("Weather creation disabled.");
 	return newweather;
 }
@@ -44,54 +43,38 @@ function newWeather(conditionname, imageurl, Condition){
 
 function fetchWeather(conditionname, res){
 	//Query the database for which image we should use for the provided weather condition.w
-
-	mongoose.connect('mongodb://DB_USERNAME:DB_PASSWORD@oceanic.mongohq.com:10079/developer');
+    
+	mongoose.connect("mongodb://" + mongouser + ":" + mongopassword + "@" + mongourl);
 	var db = mongoose.connection;
 	db.on('error', console.error.bind(console, 'connection error:'));
 	db.once('open', function callback(){
-
-		console.log("Request: " + conditionname);
-
-		/*
-			Weather condition in is url. Optionally we can create a new weather condition that points to the
-			provided image url. (Disabled)
-		*/
-
-		var imgurl = conditionname.split("/")[3];
-		conditionname = conditionname.split("/")[2];
-
-		var Condition = mongoose.model('Weather', models.weatherschema);
-		Condition.findOne({ "name" : conditionname }, function(err, wthr){
-			if (err) return console.log(err);
-			
-			if (wthr)
-				console.log("Document Found.\n\tName: %s\n\tImage: %s", wthr.name, wthr.imageurl);
-
-			else
-				wthr = newWeather(conditionname, imgurl, Condition)
-
-			//Search flickr for a background image based on the current condition. Disabled.
-			/*Flickr.tokenOnly(flickrOptions, function(error, flickr) {
-			// we can now use "flickr" as our API object
-				flickr.photos.search({
-					text: conditionname,
-					safe_search: 1,
-					page: 1,
-					per_page: 1
-				}, function(err, result) {
-					// result is Flickr's response
-					result = result["photos"]["photo"][0]
-					console.log(result)
-					console.log("http://farm%s.staticflickr.com/%s/%s_%s.jpg", result["farm"], result["server"], result["id"], result["secret"]);
-					res.send("http://farm" + result["farm"] + ".staticflickr.com/" + result["server"] + "/" + result["id"] + "_" + result["secret"] + ".jpg")
-				});
-			});*/
-
-			res.send(wthr.imageurl);
-			console.log("End Request\n");
-			mongoose.connection.close();
-		});
-	});
+            
+        console.log("Request: " + conditionname);
+        
+        
+        //	Weather condition in is url. Optionally we can create a new weather
+        //  condition that points to the
+        //  provided image url. (Disabled)
+        
+        
+        var imgurl = conditionname.split("/")[3];
+        conditionname = conditionname.split("/")[2];
+        
+        var Condition = mongoose.model('Weather', models.weatherschema);
+        Condition.findOne({ "name" : conditionname }, function(err, wthr){
+            if (err) return console.log(err);
+                          
+            if (wthr)
+                console.log("Document Found.\n\tName: %s\n\tImage: %s", wthr.name, wthr.imageurl);
+                          
+            else
+                wthr = newWeather(conditionname, imgurl, Condition)
+                          
+            res.send(wthr.imageurl);
+            console.log("End Request\n");
+            mongoose.connection.close();
+        });
+    });
 }
 
 
