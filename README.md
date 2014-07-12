@@ -52,6 +52,6 @@ I've included a backup of the mongodb I used for this project. You can clone it 
   ```mongorestore --host 127.0.0.1 ./dump/```
 
 or for a remote server running:
-  ```mongorestore -h MONGO_DB_ADDRESS:PORT -d MONGODATABASE -u USERNAME -p PASSWORD ./dump
+  ```mongorestore -h MONGO_DB_ADDRESS:PORT -d MONGODATABASE -u USERNAME -p PASSWORD ./dump```
 
 See <a href="http://support.mongohq.com/importing-exporting/local-to-mongohq.html">http://support.mongohq.com/importing-exporting/local-to-mongohq.html</a> for more information.
