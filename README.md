@@ -39,6 +39,7 @@ Then for express:
 Move to the CrawlingSpecter install directory and run:
   ```node index.js```
 
+Then navigate to ```http://localhost:8000``` in your web browser, replacing the 8000 with the port you chose.
 
 ###DETAILS
 
